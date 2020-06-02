@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"github.com/jmoiron/sqlx"
 	_ "github.com/lib/pq"
-	"github.com/stetsd/monk-api/config"
 	"github.com/stetsd/monk-api/internal/infrastructure/logger"
+	"github.com/stetsd/monk-conf"
 )
 
 type DbDriver struct {

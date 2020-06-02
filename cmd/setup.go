@@ -3,7 +3,7 @@ package cmd
 import (
 	"bufio"
 	"github.com/spf13/cobra"
-	"github.com/stetsd/monk-api/config"
+	"github.com/stetsd/monk-conf"
 	"os"
 )
 

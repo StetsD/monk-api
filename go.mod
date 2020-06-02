@@ -12,4 +12,5 @@ require (
 	github.com/spf13/cobra v1.0.0
 	github.com/spf13/viper v1.7.0
 	github.com/stetsd/micro-brick v0.0.0-20200602075340-52453687fc2b // indirect
+	github.com/stetsd/monk-conf v0.0.0-20200602095823-d7ecd1a04ed4
 )

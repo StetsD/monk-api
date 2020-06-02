@@ -1,11 +1,11 @@
 package app
 
 import (
-	"github.com/stetsd/monk-api/config"
 	"github.com/stetsd/monk-api/internal/domain/services"
 	"github.com/stetsd/monk-api/internal/infrastructure/dbDriver"
 	"github.com/stetsd/monk-api/internal/infrastructure/logger"
 	"github.com/stetsd/monk-api/internal/tools"
+	"github.com/stetsd/monk-conf"
 	"net"
 	"net/http"
 	"os"
