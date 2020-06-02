@@ -2,10 +2,10 @@ package app
 
 import (
 	"github.com/stetsd/monk-api/internal/domain/services"
-	"github.com/stetsd/monk-api/internal/infrastructure/dbDriver"
 	"github.com/stetsd/monk-api/internal/infrastructure/logger"
 	"github.com/stetsd/monk-api/internal/tools"
 	"github.com/stetsd/monk-conf"
+	"github.com/stetsd/monk-db-driver"
 	"net"
 	"net/http"
 	"os"
@@ -27,7 +27,7 @@ func NewServer(config config.Config) *Server {
 func (server *Server) Start() {
 	logger.Log.Info("Configure the server")
 
-	dbD, err := dbDriver.NewDbDriver(server.config)
+	dbD, err := monk_db_driver.NewDbDriver(server.config)
 
 	if err != nil {
 		panic(err)
