@@ -7,7 +7,8 @@ import (
 )
 
 type ServiceCollection struct {
-	ServiceUser services.ServiceUser
+	ServiceUser  services.ServiceUser
+	ServiceEvent services.ServiceEvent
 }
 
 func Bind(driver *monk_db_driver.DbDriver, serviceNames ...string) ServiceCollection {
@@ -19,6 +20,8 @@ func Bind(driver *monk_db_driver.DbDriver, serviceNames ...string) ServiceCollec
 			serviceCollection.ServiceUser = services.ServiceUser{
 				UserStore: pgRepoUserStore,
 			}
+		case services.ServiceEventName:
+			serviceCollection.ServiceEvent = services.ServiceEvent{}
 		}
 	}
 

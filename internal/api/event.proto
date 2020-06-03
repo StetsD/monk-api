@@ -24,5 +24,6 @@ message EventResult {
     ERROR = 1;
   }
   Status status = 1;
-  string statusText = 2;
+  int64 eventId = 2;
+  string statusText = 3;
 }

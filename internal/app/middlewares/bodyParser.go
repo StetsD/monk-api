@@ -3,6 +3,7 @@ package middlewares
 import (
 	"context"
 	"encoding/json"
+	"github.com/gorilla/mux"
 	"github.com/stetsd/monk-api/internal/app/constants"
 	"github.com/stetsd/monk-api/internal/app/schemas"
 	"github.com/stetsd/monk-api/internal/infrastructure/logger"
@@ -11,28 +12,44 @@ import (
 	"net/http"
 )
 
-func BodyParser(next http.Handler) http.Handler {
-	return http.HandlerFunc(func(w http.ResponseWriter, req *http.Request) {
-		bodyRaw, err := ioutil.ReadAll(req.Body)
+func handleUnmarshalErr(err error, w http.ResponseWriter, req *http.Request) {
+	logger.Log.ErrorHttp(req, err.Error(), http.StatusBadRequest)
+	helpers.Throw(w, http.StatusBadRequest, &constants.EmptyString)
+}
 
-		if err != nil {
-			logger.Log.Error(err.Error())
-			helpers.Throw(w, http.StatusInternalServerError, &constants.EmptyString)
-			return
-		}
+func BodyParser(bodyType string) mux.MiddlewareFunc {
+	return func(next http.Handler) http.Handler {
+		return http.HandlerFunc(func(w http.ResponseWriter, req *http.Request) {
+			bodyRaw, err := ioutil.ReadAll(req.Body)
 
-		var msg schemas.RegistrationBody
-		err = json.Unmarshal(bodyRaw, &msg)
+			if err != nil {
+				logger.Log.Error(err.Error())
+				helpers.Throw(w, http.StatusInternalServerError, &constants.EmptyString)
+				return
+			}
 
-		if err != nil {
-			logger.Log.ErrorHttp(req, err.Error(), http.StatusBadRequest)
-			helpers.Throw(w, http.StatusBadRequest, &constants.EmptyString)
-			return
-		}
+			switch bodyType {
+			case constants.RegistrationBody:
+				var msg schemas.RegistrationBody
+				err = json.Unmarshal(bodyRaw, &msg)
+				if err != nil {
+					handleUnmarshalErr(err, w, req)
+					return
+				}
+				ctx := context.WithValue(req.Context(), constants.BodyJson, msg)
+				req = req.WithContext(ctx)
+			case constants.EventBody:
+				var msg schemas.EventBody
+				err = json.Unmarshal(bodyRaw, &msg)
+				if err != nil {
+					handleUnmarshalErr(err, w, req)
+					return
+				}
+				ctx := context.WithValue(req.Context(), constants.BodyJson, msg)
+				req = req.WithContext(ctx)
+			}
 
-		ctx := context.WithValue(req.Context(), constants.BodyJson, msg)
-		req = req.WithContext(ctx)
-
-		next.ServeHTTP(w, req)
-	})
+			next.ServeHTTP(w, req)
+		})
+	}
 }

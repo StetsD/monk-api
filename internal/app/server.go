@@ -33,7 +33,10 @@ func (server *Server) Start() {
 		panic(err)
 	}
 
-	serviceCollection := tools.Bind(dbD, services.ServiceUserName)
+	serviceCollection := tools.Bind(dbD,
+		services.ServiceUserName,
+		services.ServiceEventName,
+	)
 	router := NewHttpRouter(&serviceCollection)
 
 	server.httpServer = &http.Server{
