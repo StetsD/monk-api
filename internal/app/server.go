@@ -2,6 +2,7 @@ package app
 
 import (
 	"github.com/stetsd/monk-api/internal/domain/services"
+	"github.com/stetsd/monk-api/internal/infrastructure/grpcClient"
 	"github.com/stetsd/monk-api/internal/infrastructure/logger"
 	"github.com/stetsd/monk-api/internal/tools"
 	"github.com/stetsd/monk-conf"
@@ -33,7 +34,20 @@ func (server *Server) Start() {
 		panic(err)
 	}
 
+	conn, err := grpcClient.NewGrpcConn()
+
+	if err != nil {
+		panic(err)
+	}
+
+	defer func() {
+		if err := conn.Close(); err != nil {
+			panic(err)
+		}
+	}()
+
 	serviceCollection := tools.Bind(dbD,
+		conn,
 		services.ServiceUserName,
 		services.ServiceEventName,
 	)

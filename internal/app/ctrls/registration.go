@@ -6,9 +6,6 @@ import (
 	"github.com/stetsd/monk-api/internal/app/schemas"
 	"github.com/stetsd/monk-api/internal/domain/errorsDomain"
 	"github.com/stetsd/monk-api/internal/domain/services"
-	"github.com/stetsd/monk-api/internal/errorsApp"
-	"github.com/stetsd/monk-api/internal/infrastructure/logger"
-	"github.com/stetsd/monk-api/internal/tools/helpers"
 	"net/http"
 )
 
@@ -17,10 +14,7 @@ func Registration(_ http.Handler) http.Handler {
 		serviceUser, ok := req.Context().Value(services.ServiceUserName).(services.ServiceUser)
 
 		if !ok {
-			logger.Log.Error(
-				errorsApp.Error("crtls.registration: missed field \"" + services.ServiceUserName + "\" in ctx"),
-			)
-			helpers.Throw(w, http.StatusInternalServerError, &constants.EmptyString)
+			handleErrorServiceUndefined("crtls.registration: missed field \""+services.ServiceUserName+"\" in ctx", w)
 			return
 		}
 
@@ -32,11 +26,9 @@ func Registration(_ http.Handler) http.Handler {
 			_, ok := err.(errorsDomain.ErrorUser)
 			if ok {
 				errorText := err.Error()
-				logger.Log.ErrorHttp(req, errorText, http.StatusBadRequest)
-				helpers.Throw(w, http.StatusBadRequest, &errorText)
+				handleErrorBadRequest(&errorText, w, req)
 			} else {
-				logger.Log.Error(err.Error())
-				helpers.Throw(w, http.StatusInternalServerError, &constants.EmptyString)
+				handleErrorInternal(err.Error(), w)
 			}
 			return
 		}
@@ -45,8 +37,7 @@ func Registration(_ http.Handler) http.Handler {
 		jsonBody, err := json.Marshal(result)
 
 		if err != nil {
-			logger.Log.Error(err.Error())
-			helpers.Throw(w, http.StatusInternalServerError, &constants.EmptyString)
+			handleErrorInternal(err.Error(), w)
 			return
 		}
 
@@ -54,8 +45,7 @@ func Registration(_ http.Handler) http.Handler {
 		_, err = w.Write(jsonBody)
 
 		if err != nil {
-			logger.Log.Error(err.Error())
-			helpers.Throw(w, http.StatusInternalServerError, &constants.EmptyString)
+			handleErrorInternal(err.Error(), w)
 			return
 		}
 

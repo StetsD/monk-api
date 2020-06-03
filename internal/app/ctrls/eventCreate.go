@@ -5,24 +5,35 @@ import (
 	"fmt"
 	"github.com/stetsd/monk-api/internal/app/constants"
 	"github.com/stetsd/monk-api/internal/app/schemas"
-	"github.com/stetsd/monk-api/internal/infrastructure/logger"
-	"github.com/stetsd/monk-api/internal/tools/helpers"
+	"github.com/stetsd/monk-api/internal/domain/services"
 	"net/http"
 )
 
 func EventCreate(_ http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, req *http.Request) {
+		serviceEvent, ok := req.Context().Value(services.ServiceEventName).(services.ServiceEvent)
+
+		if !ok {
+			handleErrorServiceUndefined("crtls.eventCreate: missed field \""+services.ServiceEventName+"\" in ctx", w)
+			return
+		}
 
 		body := req.Context().Value(constants.BodyJson).(schemas.EventBody)
 
-		fmt.Println(body)
+		eventResult, err := serviceEvent.GrpcConn.SendEvent(&body)
+
+		if err != nil {
+			handleErrorInternal(err.Error(), w)
+			return
+		}
+
+		fmt.Println("AAAAAAAAAAAAAAAAA", eventResult)
 
 		result := schemas.HttpResult{Result: "success"}
 		jsonBody, err := json.Marshal(result)
 
 		if err != nil {
-			logger.Log.Error(err.Error())
-			helpers.Throw(w, http.StatusInternalServerError, &constants.EmptyString)
+			handleErrorInternal(err.Error(), w)
 			return
 		}
 
@@ -30,8 +41,7 @@ func EventCreate(_ http.Handler) http.Handler {
 		_, err = w.Write(jsonBody)
 
 		if err != nil {
-			logger.Log.Error(err.Error())
-			helpers.Throw(w, http.StatusInternalServerError, &constants.EmptyString)
+			handleErrorInternal(err.Error(), w)
 			return
 		}
 

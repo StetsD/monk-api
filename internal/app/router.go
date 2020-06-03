@@ -39,6 +39,7 @@ func NewHttpRouter(serviceCollection *tools.ServiceCollection) *mux.Router {
 			middlewares.BodyParser(constants.EventBody),
 			// TODO: check auth
 			validators.EventCreate,
+			middlewares.ServiceCtxInjector(services.ServiceEventName, serviceCollection),
 			ctrls.EventCreate,
 		)
 	}

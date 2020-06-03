@@ -16,6 +16,8 @@ func ServiceCtxInjector(serviceName string, coll *tools.ServiceCollection) mux.M
 			switch serviceName {
 			case services.ServiceUserName:
 				ctx = context.WithValue(req.Context(), serviceName, coll.ServiceUser)
+			case services.ServiceEventName:
+				ctx = context.WithValue(req.Context(), serviceName, coll.ServiceEvent)
 			}
 
 			req = req.WithContext(ctx)

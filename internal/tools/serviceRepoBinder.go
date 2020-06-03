@@ -3,6 +3,7 @@ package tools
 import (
 	"github.com/stetsd/monk-api/internal/domain/repositories"
 	"github.com/stetsd/monk-api/internal/domain/services"
+	"github.com/stetsd/monk-api/internal/infrastructure/grpcClient"
 	"github.com/stetsd/monk-db-driver"
 )
 
@@ -11,7 +12,7 @@ type ServiceCollection struct {
 	ServiceEvent services.ServiceEvent
 }
 
-func Bind(driver *monk_db_driver.DbDriver, serviceNames ...string) ServiceCollection {
+func Bind(driver *monk_db_driver.DbDriver, grpcConn *grpcClient.GrpcConn, serviceNames ...string) ServiceCollection {
 	serviceCollection := ServiceCollection{}
 	for _, service := range serviceNames {
 		switch service {
@@ -21,7 +22,9 @@ func Bind(driver *monk_db_driver.DbDriver, serviceNames ...string) ServiceCollec
 				UserStore: pgRepoUserStore,
 			}
 		case services.ServiceEventName:
-			serviceCollection.ServiceEvent = services.ServiceEvent{}
+			serviceCollection.ServiceEvent = services.ServiceEvent{
+				GrpcConn: grpcConn,
+			}
 		}
 	}
 
