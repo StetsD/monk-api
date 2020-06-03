@@ -1,0 +1,28 @@
+syntax="proto3";
+
+package monk_api;
+
+option go_package="api";
+
+import "google/protobuf/timestamp.proto";
+
+service Api {
+  rpc sendEvent(Event) returns (EventResult);
+}
+
+message Event {
+  string title = 1;
+  google.protobuf.Timestamp dateStart = 2;
+  google.protobuf.Timestamp dateEnd = 3;
+  string description = 4;
+  int64 userId = 5;
+}
+
+message EventResult {
+  enum Status {
+    SUCCESS = 0;
+    ERROR = 1;
+  }
+  Status status = 1;
+  string statusText = 2;
+}

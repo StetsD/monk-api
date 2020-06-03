@@ -58,5 +58,6 @@ func Registration(_ http.Handler) http.Handler {
 			helpers.Throw(w, http.StatusInternalServerError, &constants.EmptyString)
 			return
 		}
+
 	})
 }
