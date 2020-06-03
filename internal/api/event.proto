@@ -1,6 +1,6 @@
 syntax="proto3";
 
-package monk_api;
+package api;
 
 option go_package="api";
 
