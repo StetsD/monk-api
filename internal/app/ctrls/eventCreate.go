@@ -2,7 +2,6 @@ package ctrls
 
 import (
 	"encoding/json"
-	"fmt"
 	"github.com/stetsd/monk-api/internal/app/constants"
 	"github.com/stetsd/monk-api/internal/app/schemas"
 	"github.com/stetsd/monk-api/internal/domain/services"
@@ -27,9 +26,7 @@ func EventCreate(_ http.Handler) http.Handler {
 			return
 		}
 
-		fmt.Println("AAAAAAAAAAAAAAAAA", eventResult)
-
-		result := schemas.HttpResult{Result: "success"}
+		result := schemas.IdResult{Id: int(eventResult.EventId)}
 		jsonBody, err := json.Marshal(result)
 
 		if err != nil {
