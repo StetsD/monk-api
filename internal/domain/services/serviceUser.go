@@ -16,12 +16,12 @@ func (su *ServiceUser) Login() error {
 	return nil
 }
 
-func (su *ServiceUser) Registration(data *schemas.RegistrationBody) error {
-	err := su.UserStore.Registration(data)
+func (su *ServiceUser) Registration(data *schemas.RegistrationBody) (int, error) {
+	id, err := su.UserStore.Registration(data)
 
 	if err != nil {
-		return err
+		return 0, err
 	}
 
-	return nil
+	return id, nil
 }

@@ -20,7 +20,7 @@ func Registration(_ http.Handler) http.Handler {
 
 		body := req.Context().Value(constants.BodyJson).(schemas.RegistrationBody)
 
-		err := serviceUser.Registration(&body)
+		id, err := serviceUser.Registration(&body)
 
 		if err != nil {
 			_, ok := err.(errorsDomain.ErrorUser)
@@ -33,7 +33,7 @@ func Registration(_ http.Handler) http.Handler {
 			return
 		}
 
-		result := schemas.HttpResult{Result: "success"}
+		result := schemas.IdResult{Id: id}
 		jsonBody, err := json.Marshal(result)
 
 		if err != nil {

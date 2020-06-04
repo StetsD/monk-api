@@ -6,6 +6,10 @@ type HttpResult struct {
 	Result string `json:"result"`
 }
 
+type IdResult struct {
+	Id int `json:"id"`
+}
+
 type RegistrationBody struct {
 	Name     string `json:"name"`
 	Email    string `json:"email"`

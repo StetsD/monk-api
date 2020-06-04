@@ -8,7 +8,7 @@ import (
 
 type UserStore interface {
 	Login(ctx context.Context, user *models.User) error
-	Registration(data *schemas.RegistrationBody) error
+	Registration(data *schemas.RegistrationBody) (int, error)
 	Logout(ctx context.Context, id int) error
 	Put(ctx context.Context, user *models.User) (*models.User, error)
 	Delete(ctx context.Context, id int) error
