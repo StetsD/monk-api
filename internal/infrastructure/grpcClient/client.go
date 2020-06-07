@@ -41,6 +41,7 @@ func (c *GrpcConn) SendEvent(msg *schemas.EventBody) (*api.EventResult, error) {
 		UserId:      msg.UserId,
 		DateStart:   dateStart,
 		DateEnd:     dateEnd,
+		Email:       msg.Email,
 	})
 
 	if err != nil {

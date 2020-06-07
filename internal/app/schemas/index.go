@@ -22,4 +22,6 @@ type EventBody struct {
 	DateEnd     time.Time `json:"dateEnd"`
 	Description string    `json:"description"`
 	UserId      int64     `json:"userId"`
+	// TODO: do auth and get email from redis
+	Email string `json:"email"`
 }

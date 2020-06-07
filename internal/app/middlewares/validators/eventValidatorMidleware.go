@@ -3,6 +3,7 @@ package validators
 import (
 	"fmt"
 	validation "github.com/go-ozzo/ozzo-validation"
+	"github.com/go-ozzo/ozzo-validation/is"
 	"github.com/stetsd/monk-api/internal/app/constants"
 	"github.com/stetsd/monk-api/internal/app/schemas"
 	"net/http"
@@ -33,6 +34,7 @@ func EventCreate(next http.Handler) http.Handler {
 			validation.Field(&bodyAsStruct.UserId, validation.Required),
 			validation.Field(&bodyAsStruct.DateEnd, validation.Required),
 			validation.Field(&bodyAsStruct.DateStart, validation.Required),
+			validation.Field(&bodyAsStruct.Email, validation.Required, is.Email),
 		)
 
 		if err != nil {

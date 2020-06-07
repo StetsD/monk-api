@@ -19,7 +19,7 @@ func EventCreate(_ http.Handler) http.Handler {
 
 		body := req.Context().Value(constants.BodyJson).(schemas.EventBody)
 
-		eventResult, err := serviceEvent.GrpcConn.SendEvent(&body)
+		eventResult, err := serviceEvent.SendEvent(&body)
 
 		if err != nil {
 			handleErrorInternal(err.Error(), w)
