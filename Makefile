@@ -1,5 +1,5 @@
 build:
-	go build main.go
+	go build -o monkapp main.go
 
 setup:
 	go run main.go setup
