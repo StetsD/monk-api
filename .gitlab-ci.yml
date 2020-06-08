@@ -17,7 +17,7 @@ test:
     paths:
       - /go/src
       - /go/pkg
-    policy: pull
+    policy: push
   services:
     - 'postgres:latest'
   script:
