@@ -15,7 +15,7 @@ func NewHttpRouter(serviceCollection *tools.ServiceCollection) *mux.Router {
 
 	router.Use(middlewares.Log)
 
-	if &serviceCollection.ServiceUser != nil {
+	if serviceCollection.ServiceUser != (services.ServiceUser{}) {
 		// Create user
 		routeRegistration := router.
 			Path("/registration").
@@ -29,7 +29,7 @@ func NewHttpRouter(serviceCollection *tools.ServiceCollection) *mux.Router {
 		)
 	}
 
-	if &serviceCollection.ServiceEvent != nil {
+	if serviceCollection.ServiceEvent != (services.ServiceEvent{}) {
 		// Create event
 		routeCreateEvent := router.
 			Path("/event").

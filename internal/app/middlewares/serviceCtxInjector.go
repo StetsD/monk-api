@@ -15,8 +15,10 @@ func ServiceCtxInjector(serviceName string, coll *tools.ServiceCollection) mux.M
 
 			switch serviceName {
 			case services.ServiceUserName:
+				// nolint:staticcheck
 				ctx = context.WithValue(req.Context(), serviceName, coll.ServiceUser)
 			case services.ServiceEventName:
+				// nolint:staticcheck
 				ctx = context.WithValue(req.Context(), serviceName, coll.ServiceEvent)
 			}
 

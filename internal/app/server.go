@@ -77,6 +77,7 @@ func (server *Server) Start() {
 	case sig := <-stopChan:
 		server.Stop()
 		logger.Log.Info("stopChan msg: Server was " + sig.String())
+		os.Exit(0)
 	}
 }
 

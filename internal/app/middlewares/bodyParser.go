@@ -36,6 +36,7 @@ func BodyParser(bodyType string) mux.MiddlewareFunc {
 					handleUnmarshalErr(err, w, req)
 					return
 				}
+				// nolint:staticcheck
 				ctx := context.WithValue(req.Context(), constants.BodyJson, msg)
 				req = req.WithContext(ctx)
 			case constants.EventBody:
@@ -45,6 +46,7 @@ func BodyParser(bodyType string) mux.MiddlewareFunc {
 					handleUnmarshalErr(err, w, req)
 					return
 				}
+				// nolint:staticcheck
 				ctx := context.WithValue(req.Context(), constants.BodyJson, msg)
 				req = req.WithContext(ctx)
 			}
