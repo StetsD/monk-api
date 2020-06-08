@@ -23,7 +23,7 @@ test:
   script:
     - for i in $(printenv | cut -d '=' -f 1); do ENV_WORD=$(echo $i | cut -d '_' -f 1); if [ "$ENV_WORD" = "TEST" ]; then export ${i/TEST_/}="${!i}"; fi; done
     - go mod tidy
-    - make test
+    - go get -u
   variables:
     POSTGRES_USER: $TEST_POSTGRES_USER
     POSTGRES_PASSWORD: $TEST_POSTGRES_PASSWORD
