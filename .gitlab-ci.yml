@@ -4,6 +4,11 @@ stages:
   - migrate
   - deploy
 
+variables:
+  GO_SRC: /go/src
+  GO_PKG: /go/pkg
+  C_RESULT: ci_result/
+
 image: docker:latest
 
 services:
@@ -15,8 +20,9 @@ test:
   cache:
     key: $CI_PIPELINE_ID
     paths:
-      - /go/src
-      - /go/pkg
+      - $GO_SRC
+      - $GO_PKG
+      - $C_RESULT
     policy: push
   services:
     - 'postgres:latest'
@@ -26,21 +32,22 @@ test:
     - go get
     - make lint
     - make test
+    - cp -r $C_RESULT ./
   variables:
     POSTGRES_USER: $TEST_POSTGRES_USER
     POSTGRES_PASSWORD: $TEST_POSTGRES_PASSWORD
 
 build:
   stage: build
-  image: $MONK_DOCKER_PRECOMPILED
   cache:
     key: $CI_PIPELINE_ID
     paths:
-      - /go/src
-      - /go/pkg
+      - $GO_SRC
+      - $GO_PKG
+      - $C_RESULT
     policy: pull
   script:
-    - make protocomplile
+    - mv $C_RESULT ./
     - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
     - docker build --pull -t "$CI_REGISTRY_IMAGE" .
     - docker push "$CI_REGISTRY_IMAGE"
@@ -53,8 +60,8 @@ migrate:
   cache:
     key: $CI_PIPELINE_ID
     paths:
-      - /go/src
-      - /go/pkg
+      - $GO_SRC
+      - $GO_PKG
     policy: pull
   script:
     - for i in $(printenv | cut -d '=' -f 1); do ENV_WORD=$(echo $i | cut -d '_' -f 1); if [ "$ENV_WORD" = "PROD" ]; then export ${i/PROD_/}="${!i}"; fi; done
