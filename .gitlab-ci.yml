@@ -7,7 +7,7 @@ stages:
 variables:
   GO_SRC: go/src/
   GO_PKG: go/pkg/
-  C_RESULT: ci-results/
+  C_RESULT: /ci-results
 
 image: docker:latest
 
@@ -34,12 +34,7 @@ test:
     - make lint
     - make test
     - mkdir -p $GO_SRC $GO_PKG $C_RESULT
-    - printenv
-    - ls -lah
-    - ls -lah /
-    - ls -lah $HOME
-    - ls -lah /home
-    - cp -r "$GOPATH"/src $GO_SRC
+    - cp -r $GOPATH/src $GO_SRC
     - cp -r $GOPATH/pkg $GO_PKG
     - cp -r ./ $C_RESULT
   variables:
