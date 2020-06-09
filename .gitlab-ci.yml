@@ -33,7 +33,8 @@ test:
     - go get
     - make lint
     - make test
-    - cp -r $GOPATH/src $GO_SRC
+    - mkdir -p $GO_SRC $GO_PKG $C_RESULT
+    - cp -r "$GOPATH"/src $GO_SRC
     - cp -r $GOPATH/pkg $GO_PKG
     - cp -r ./* $C_RESULT
   variables:
