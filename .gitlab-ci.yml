@@ -7,7 +7,7 @@ stages:
 variables:
   GO_SRC: /go/src
   GO_PKG: /go/pkg
-  C_RESULT: ci_result/
+  C_RESULT: ci/
 
 image: docker:latest
 
