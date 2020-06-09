@@ -25,6 +25,6 @@ test:
     - go mod tidy
     - go get -u
   variables:
-    GO111MODULE: on
+    GO111MODULE: 'on'
     POSTGRES_USER: $TEST_POSTGRES_USER
     POSTGRES_PASSWORD: $TEST_POSTGRES_PASSWORD
