@@ -5,21 +5,19 @@ stages:
   - deploy
 
 variables:
-  GO_SRC: /go/src
-  GO_PKG: /go/pkg
-  C_RESULT: /ci-results
+  GO_SRC: go/src/
+  GO_PKG: go/pkg/
+  C_RESULT: ci-results/
 
 image: docker:latest
 
 services:
   - docker:dind
 
-before_script:
-  - mkdir $C_RESULT
-
 test:
   stage: test
   image: $MONK_DOCKER_PRECOMPILED
+  coverage: '/All files\s*\|\s*([0-9.]+)/'
   cache:
     key: $CI_PIPELINE_ID
     paths:
@@ -35,6 +33,8 @@ test:
     - go get
     - make lint
     - make test
+    - cp -r $GOPATH/src $GO_SRC
+    - cp -r $GOPATH/pkg $GO_PKG
     - cp -r ./* $C_RESULT
   variables:
     POSTGRES_USER: $TEST_POSTGRES_USER
@@ -50,7 +50,7 @@ build:
       - $C_RESULT
     policy: pull
   script:
-    - mv $C_RESULT ./
+    - mv $C_RESULT /
     - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
     - docker build --pull -t "$CI_REGISTRY_IMAGE" .
     - docker push "$CI_REGISTRY_IMAGE"
