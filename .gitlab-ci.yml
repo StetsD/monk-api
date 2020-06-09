@@ -5,9 +5,9 @@ stages:
   - deploy
 
 variables:
-  GO_SRC: go/src/
-  GO_PKG: go/pkg/
-  C_RESULT: ci-results/
+  GO_SRC: go/src
+  GO_PKG: go/pkg
+  C_RESULT: ci-results
 
 image: docker:latest
 
@@ -37,7 +37,7 @@ test:
     - cp -r $GOPATH/src $GO_SRC
     - cp -r $GOPATH/pkg $GO_PKG
     - cp -r ./* /tmp/build
-    - mv /tmp/build/ $C_RESULT
+    - mv /tmp/build/* $C_RESULT
     - ls -lah $C_RESULT
     - ls -lah $C_RESULT/internal/api
   variables:
