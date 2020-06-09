@@ -52,7 +52,6 @@ build:
     policy: pull
   script:
     - ls -lah /
-    - ls -lah /go
     - ls -lah $HOME
     - ls -lah
     - ls -lah /root
