@@ -57,7 +57,7 @@ build:
     - ls -lah
     - ls -lah /root
     - ls -lah $C_RESULT/internal/api
-    - mv -f $C_RESULT/* ./
+    - rsync -av $C_RESULT/* ./
     - ls -lah ./internal/api
     - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
     - docker build --pull -t "$CI_REGISTRY_IMAGE" .
