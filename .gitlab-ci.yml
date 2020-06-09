@@ -11,7 +11,7 @@ services:
 
 test:
   stage: test
-  image: golang:1.14
+  image: $MONK_DOCKER_PRECOMPILED
   cache:
     key: $CI_PIPELINE_ID
     paths:
