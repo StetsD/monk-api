@@ -32,6 +32,7 @@ test:
 
 build:
   stage: build
+  image: $MONK_DOCKER_PRECOMPILED
   cache:
     key: $CI_PIPELINE_ID
     paths:
