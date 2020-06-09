@@ -1,8 +1,8 @@
 stages:
   - test
-#  - build
-#  - test image
-#  - deploy
+  - build
+  - migrate
+  - deploy
 
 image: docker:latest
 
@@ -24,7 +24,44 @@ test:
     - for i in $(printenv | cut -d '=' -f 1); do ENV_WORD=$(echo $i | cut -d '_' -f 1); if [ "$ENV_WORD" = "TEST" ]; then export ${i/TEST_/}="${!i}"; fi; done
     - make protocomplile
     - go get
+    - make lint
     - make test
   variables:
     POSTGRES_USER: $TEST_POSTGRES_USER
     POSTGRES_PASSWORD: $TEST_POSTGRES_PASSWORD
+
+build:
+  stage: build
+  cache:
+    key: $CI_PIPELINE_ID
+    paths:
+      - /go/src
+      - /go/pkg
+    policy: pull
+  script:
+    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
+    - docker build -t "$CI_REGISTRY_IMAGE"
+    - docker push "$CI_REGISTRY_IMAGE"
+  only:
+    - master
+
+migrate:
+  stage: migrate
+  image: $MONK_DOCKER_PRECOMPILED
+  cache:
+    key: $CI_PIPELINE_ID
+    paths:
+      - /go/src
+      - /go/pkg
+    policy: pull
+  script:
+    - for i in $(printenv | cut -d '=' -f 1); do ENV_WORD=$(echo $i | cut -d '_' -f 1); if [ "$ENV_WORD" = "PROD" ]; then export ${i/PROD_/}="${!i}"; fi; done
+    - make setup
+    - make migrate
+
+deploy:
+  stage: deploy
+  script:
+    - echo "CHECK!!!"
+  only:
+    - master
