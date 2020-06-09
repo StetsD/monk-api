@@ -7,7 +7,7 @@ stages:
 variables:
   GO_SRC: go/src/
   GO_PKG: go/pkg/
-  C_RESULT: /ci-results/
+  C_RESULT: ci-results/
 
 image: docker:latest
 
@@ -33,10 +33,13 @@ test:
     - go get
     - make lint
     - make test
-    - mkdir -p $GO_SRC $GO_PKG $C_RESULT
+    - mkdir -p /tmp/build $GO_SRC $GO_PKG $C_RESULT
     - cp -r $GOPATH/src $GO_SRC
     - cp -r $GOPATH/pkg $GO_PKG
-    - cp -r ./* $C_RESULT
+    - cp -r ./* /tmp/build
+    - mv /tmp/build/ $C_RESULT
+    - ls -lah $C_RESULT
+    - ls -lah $C_RESULT/internal/api
   variables:
     POSTGRES_USER: $TEST_POSTGRES_USER
     POSTGRES_PASSWORD: $TEST_POSTGRES_PASSWORD
