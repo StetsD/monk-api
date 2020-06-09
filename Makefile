@@ -1,3 +1,6 @@
+protocomplile:
+	protoc ./internal/api/event.proto --go_out=plugins=grpc:.
+
 build:
 	go build -o monkapp main.go
 
