@@ -53,17 +53,10 @@ build:
       - $C_RESULT
     policy: pull
   script:
-    - ls -lah /
-    - ls -lah $HOME
-    - ls -lah
-    - ls -lah /root
-    - ls -lah $C_RESULT/internal/api
-    - printenv
     - mkdir $TEMP_DIR
     - mv $C_RESULT/* $TEMP_DIR
     - rm -r ./*
     - mv $TEMP_DIR/* ./
-    - ls -lah ./internal/api
     - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
     - docker build --pull -t "$CI_REGISTRY_IMAGE" .
     - docker push "$CI_REGISTRY_IMAGE"
@@ -80,6 +73,8 @@ migrate:
       - $GO_PKG
     policy: pull
   script:
+    - cp -ruf $GO_SRC $GOPATH/src
+    - cp -ruf $GO_PKG $GOPATH/pkg
     - for i in $(printenv | cut -d '=' -f 1); do ENV_WORD=$(echo $i | cut -d '_' -f 1); if [ "$ENV_WORD" = "PROD" ]; then export ${i/PROD_/}="${!i}"; fi; done
     - make setup
     - make migrate
