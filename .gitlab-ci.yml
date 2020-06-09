@@ -58,6 +58,8 @@ build:
     - ls -lah
     - ls -lah /root
     - ls -lah $C_RESULT/internal/api
+    - printenv
+    - mkdir $TEMP_DIR
     - mv $C_RESULT/* $TEMP_DIR
     - rm -r ./*
     - mv $TEMP_DIR/* ./
