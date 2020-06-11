@@ -1,7 +1,6 @@
 stages:
   - test
   - build
-  - migrate
   - deploy
 
 variables:
@@ -63,25 +62,9 @@ build:
   only:
     - master
 
-migrate:
-  stage: migrate
-  image: $MONK_DOCKER_PRECOMPILED
-  cache:
-    key: $CI_PIPELINE_ID
-    paths:
-      - $GO_SRC
-      - $GO_PKG
-    policy: pull
-  script:
-    - cp -ruf $GO_SRC $GOPATH/src
-    - cp -ruf $GO_PKG $GOPATH/pkg
-    - for i in $(printenv | cut -d '=' -f 1); do ENV_WORD=$(echo $i | cut -d '_' -f 1); if [ "$ENV_WORD" = "PROD" ]; then export ${i/PROD_/}="${!i}"; fi; done
-    - make setup
-    - make migrate
-
 deploy:
   stage: deploy
   script:
-    - echo "CHECK!!!"
+    - for i in $(printenv | cut -d '=' -f 1); do ENV_WORD=$(echo $i | cut -d '_' -f 1); if [ "$ENV_WORD" = "PROD" ]; then export ${i/PROD_/}="${!i}"; fi; done
   only:
     - master

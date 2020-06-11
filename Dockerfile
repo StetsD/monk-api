@@ -1,4 +1,4 @@
-FROM golang:1.14
+FROM mustbestd/monk-docker-ci-precompiled:v0.1
 
 ARG UID=1000
 ARG GID=1000
@@ -22,9 +22,11 @@ WORKDIR $W_DIR
 COPY . $SRC_DIR
 
 RUN cd $SRC_DIR; make build && \
-    mv $APP_NAME /usr/local/bin && \
-    cd $W_DIR ; rm -r $SRC_DIR
+    mv $APP_NAME /usr/local/bin
 
 USER $USER_NAME
+
+CMD ["make", "setup"]
+CMD ["make", "migrate"]
 
 ENTRYPOINT monkapp $COMMAND
